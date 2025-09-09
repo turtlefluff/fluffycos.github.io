@@ -1,13 +1,23 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', Arial, sans-serif;
   margin: 0;
-  background: #f7f7f7;
+  background: #f5f5f5;
+  color: #333;
+}
+
+.section-title {
+  margin: 20px 15px 10px;
+  font-size: 1.4rem;
+  font-weight: bold;
 }
 
 .cart {
   background: white;
   padding: 15px;
   border-bottom: 2px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .cart h2 {
@@ -24,12 +34,26 @@ body {
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
+  font-size: 0.9rem;
 }
 
 .cart-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+#checkout-btn {
+  background: #111;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+#checkout-btn:hover {
+  background: #333;
 }
 
 .shop {
@@ -41,13 +65,68 @@ body {
 
 .item {
   background: white;
-  padding: 20px;
+  padding: 15px;
   text-align: center;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.item:hover {
+.item img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 20;
+}
+
+.modal-content {
+  background: #fff;
+  width: 100%;
+  max-height: 70%;
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+  animation: slideUp 0.3s ease;
+  overflow-y: auto;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.close-btn {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.options {
+  margin-top: 20px;
+  display: grid;
+  gap: 10px;
+}
+
+.option {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.option:hover {
   background: #e8f5e9;
 }

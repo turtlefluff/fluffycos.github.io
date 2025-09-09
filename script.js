@@ -3,44 +3,36 @@ const cartList = document.getElementById("cart-items");
 const cartTotal = document.getElementById("cart-total");
 const checkoutBtn = document.getElementById("checkout-btn");
 
-const productIds = ["NHN3U5BQL8UEG", "V9ZBN4H4U9X9E"];
-const shop = document.getElementById("shop");
+// Add merch items to cart
+document.querySelectorAll(".item:not(.fanservice)").forEach(item => {
+  item.addEventListener("click", () => {
+    addToCart(item.dataset.id, item.dataset.name, parseFloat(item.dataset.price));
+  });
+});
 
-// Load product info from backend (which calls PayPal)
-async function loadProduct(id) {
-  const res = await fetch(`http://localhost:3000/product/${id}`);
-  return await res.json();
-}
+// Fanservice modal logic
+const fanserviceBtn = document.querySelector(".fanservice");
+const modal = document.getElementById("fanservice-modal");
+const closeBtn = modal.querySelector(".close-btn");
 
-async function initShop() {
-  for (const id of productIds) {
-    const product = await loadProduct(id);
+fanserviceBtn.addEventListener("click", () => {
+  modal.style.display = "flex";
+});
 
-    // PayPal product API doesn’t always include price directly.
-    // If you also create catalog items (not just products), you can fetch pricing from /v2/catalogs/items.
-    const price = product.price?.value || "0.00";
+closeBtn.addEventListener("click", () => {
+  modal.style.display = "none";
+});
 
-    const div = document.createElement("div");
-    div.className = "item";
-    div.dataset.id = id;
-    div.dataset.name = product.name || `Product ${id}`;
-    div.dataset.price = price;
+// Add fanservice options
+document.querySelectorAll(".option").forEach(option => {
+  option.addEventListener("click", () => {
+    addToCart(option.dataset.id, option.dataset.name, parseFloat(option.dataset.price));
+    modal.style.display = "none";
+  });
+});
 
-    div.innerHTML = `
-      <h3>${product.name || "Unknown Item"}</h3>
-      <p>$${price}</p>
-    `;
-
-    div.addEventListener("click", () => addToCart(div));
-    shop.appendChild(div);
-  }
-}
-
-function addToCart(item) {
-  const id = item.dataset.id;
-  const name = item.dataset.name;
-  const price = parseFloat(item.dataset.price);
-
+// Add to cart function
+function addToCart(id, name, price) {
   const existing = cart.find(product => product.id === id);
   if (existing) {
     existing.qty++;
@@ -85,7 +77,6 @@ checkoutBtn.addEventListener("click", () => {
     return;
   }
 
-  // Build PayPal checkout URL
   let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1`;
 
   cart.forEach((product, i) => {
@@ -98,6 +89,3 @@ checkoutBtn.addEventListener("click", () => {
 
   window.location.href = url;
 });
-
-// Init shop on page load
-initShop();
