@@ -1,63 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simple Shop</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- PayPal Cart Script (only once per page) -->
-  <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="X7DSDTCNVDRK8"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One Page Shop</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- Navigation with View Cart -->
-  <nav>
-    <paypal-cart-button data-id="pp-view-cart"></paypal-cart-button>
-  </nav>
-
-  <!-- Page Header -->
-  <header>
-    <h1>Welcome to My Simple Store</h1>
-    <p>Select items below and pay securely with PayPal.</p>
-  </header>
-
-  <!-- Product Section -->
-  <main>
-    <!-- Product 1 -->
-    <div class="product">
-      <h2>Product One</h2>
-      <p>A short description of product one.</p>
-      <strong>$10.00</strong>
-      <div class="paypal-button">
-        <paypal-add-to-cart-button data-id="NHN3U5BQL8UEG"></paypal-add-to-cart-button>
-      </div>
+  <div class="cart">
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <div class="cart-footer">
+      <span id="cart-total">Total: $0.00</span>
+      <button id="checkout-btn">Checkout</button>
     </div>
+  </div>
 
-    <!-- Product 2 -->
-    <div class="product">
-      <h2>Product Two</h2>
-      <p>A short description of product two.</p>
-      <strong>$15.00</strong>
-      <div class="paypal-button">
-        <paypal-add-to-cart-button data-id="XXXXXXXXXXXX02"></paypal-add-to-cart-button>
-      </div>
+  <div class="shop">
+    <div class="item" data-id="NHN3U5BQL8UEG" data-name="Item A" data-price="10.00">
+      <h3>Item A</h3>
+      <p>$10.00</p>
     </div>
-
-    <!-- Product 3 -->
-    <div class="product">
-      <h2>Product Three</h2>
-      <p>A short description of product three.</p>
-      <strong>$20.00</strong>
-      <div class="paypal-button">
-        <paypal-add-to-cart-button data-id="XXXXXXXXXXXX03"></paypal-add-to-cart-button>
-      </div>
+    <div class="item" data-id="V9ZBN4H4U9X9E" data-name="Item B" data-price="15.00">
+      <h3>Item B</h3>
+      <p>$15.00</p>
     </div>
-  </main>
+  </div>
 
-  <!-- JS -->
   <script src="script.js"></script>
 </body>
 </html>
