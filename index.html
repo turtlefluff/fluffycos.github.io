@@ -1,44 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobile Shop</title>
-  <link rel="stylesheet" href="style.css" />
-  
-  <!-- PayPal Cart Script -->
-  <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="X7DSDTCNVDRK8"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One Page Shop</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- Cart Display (Always Visible) -->
-  <header>
-    <paypal-cart-button data-id="pp-view-cart"></paypal-cart-button>
-  </header>
-
-  <!-- Product Grid -->
-  <main class="product-grid">
-    <div class="product-square" data-id="NHN3U5BQL8UEG">
-      <div class="paypal-button">
-        <paypal-add-to-cart-button data-id="NHN3U5BQL8UEG"></paypal-add-to-cart-button>
-      </div>
+  <div class="cart">
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <div class="cart-footer">
+      <span id="cart-total">Total: $0.00</span>
+      <button id="checkout-btn">Checkout</button>
     </div>
-    
-    <div class="product-square" data-id="V9ZBN4H4U9X9E">
-      <h2>Item 2</h2>
-      <p>$15</p>
-    </div>
+  </div>
 
-    <div class="product-square" data-id="V9ZBN4H4U9X9E">
-      <h2>Item 3</h2>
-      <p>$10</p>
-      <div class="paypal-hidden-button">
-        <paypal-add-to-cart-button data-id="V9ZBN4H4U9X9E"></paypal-add-to-cart-button>
-      </div>
-    </div>
-
+  <div class="shop" id="shop"></div>
 
   <script src="script.js"></script>
 </body>
 </html>
-
