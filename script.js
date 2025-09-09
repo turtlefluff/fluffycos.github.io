@@ -43,21 +43,28 @@ function addToCart(id, name, price) {
 }
 
 function renderCart() {
-  cartList.innerHTML = "";
-  let total = 0;
-
-  cart.forEach(product => {
-    total += product.price * product.qty;
-    const li = document.createElement("li");
-    li.innerHTML = `
-      ${product.name} x${product.qty} - $${(product.price * product.qty).toFixed(2)}
-      <button onclick="removeFromCart('${product.id}')">❌</button>
+    cartList.innerHTML = "";
+    let total = 0;
+  
+    cart.forEach(product => {
+      total += product.price * product.qty;
+      const li = document.createElement("li");
+  
+      li.innerHTML = `
+      <div class="cart-item-info">
+        <div class="cart-item-name">${product.name}</div>
+        <div class="cart-item-details">$${(product.price * product.qty).toFixed(2)} - Qty: ${product.qty}</div>
+      </div>
+        <button class="remove-btn" onclick="removeFromCart('${product.id}')">
+          <img src="images/trashicon.svg" alt="Remove">
+        </button>
     `;
-    cartList.appendChild(li);
-  });
-
-  cartTotal.textContent = `Total: $${total.toFixed(2)}`;
-}
+      cartList.appendChild(li);
+    });
+  
+    cartTotal.textContent = `Total: $${total.toFixed(2)}`;
+  }
+  
 
 function removeFromCart(id) {
   const index = cart.findIndex(product => product.id === id);

@@ -11,6 +11,7 @@ body {
   font-weight: bold;
 }
 
+/* ===== CART ===== */
 .cart {
   background: white;
   padding: 15px;
@@ -30,37 +31,139 @@ body {
   margin: 0 0 10px;
 }
 
+/* Individual Cart Item */
 .cart li {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5px;
-  font-size: 0.9rem;
+  align-items: center;
+  margin-bottom: 10px;
+  height: 60px; 
+  padding: 0 10px;
+  border: 2px solid #ddd; /* outline instead of background */
+  border-radius: 8px;
+  background: transparent; /* remove background */
 }
+
+/* Text inside cart item */
+.cart-item-text {
+  color: #333; /* dark text on light background */
+  font-size: 1rem;
+  line-height: 1.4rem;
+}
+
+.cart-item-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cart-item-name {
+  font-size: 1.1rem; /* bigger for the title */
+  font-weight: 600;
+  color: #333;
+}
+
+.cart-item-details {
+  font-size: 0.9rem; /* smaller for price and qty */
+  color: #888;       /* light grey */
+  margin-top: 2px;
+}
+
+/* Remove button */
+.remove-btn {
+  background: #ff4d4f; /* red button */
+  border: none;
+  cursor: pointer;
+  height: 40px;      /* fixed size inside cart item */
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* circular button */
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.remove-btn img {
+  height: 70%; /* fills most of vertical space */
+  width: auto;
+  display: block;
+}
+
+.remove-btn:hover {
+  background: #ff7875;
+}
+
+.remove-btn .material-symbols-outlined {
+  font-size: 20px;
+  color: white;
+}
+
 
 .cart-footer {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column; /* stack total and checkout */
   align-items: center;
+  gap: 10px;
+  margin-top: 10px;
 }
 
+/* Checkout button */
 #checkout-btn {
   background: #111;
   color: white;
   border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 1rem;
+  width: auto;
   transition: 0.2s;
 }
+
 #checkout-btn:hover {
   background: #333;
 }
 
+/* ===== MOBILE ===== */
+@media (max-width: 600px) {
+  .cart li {
+    height: 70px;
+    padding: 0 12px;
+  }
+
+  .cart-item-text {
+    font-size: 1.1rem;
+  }
+
+  .remove-btn img {
+    height: 80%;
+  }
+
+  .remove-btn {
+    height: 45px;
+    width: 45px;
+  }
+
+  .remove-btn .material-symbols-outlined {
+    font-size: 22px;
+  }
+
+  #checkout-btn {
+    width: 100%;
+    padding: 15px 0;
+    font-size: 1.2rem;
+    border-radius: 10px;
+  }
+}
+
+/* ===== SHOP GRID ===== */
 .shop {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 15px;
   padding: 15px;
+  justify-content: center; /* center squares */
 }
 
 .item {
@@ -70,19 +173,27 @@ body {
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  aspect-ratio: 1 / 1; /* maintain square shape */
 }
+
 .item:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .item img {
-  max-width: 100%;
+  width: 100%;
+  height: 60%; /* image takes 60% of square height */
+  object-fit: cover;
   border-radius: 8px;
   margin-bottom: 10px;
 }
 
-/* Modal Styles */
+/* ===== MODAL ===== */
 .modal {
   display: none;
   position: fixed;
@@ -127,6 +238,7 @@ body {
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .option:hover {
   background: #e8f5e9;
 }
