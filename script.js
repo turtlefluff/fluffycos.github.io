@@ -3,6 +3,14 @@ const cartList = document.getElementById("cart-items");
 const cartTotal = document.getElementById("cart-total");
 const checkoutBtn = document.getElementById("checkout-btn");
 
+// Currency formatter for MXN
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: 'MXN'
+  }).format(value);
+};
+
 // Add merch items to cart
 document.querySelectorAll(".item:not(.fanservice)").forEach(item => {
   item.addEventListener("click", () => {
@@ -43,28 +51,27 @@ function addToCart(id, name, price) {
 }
 
 function renderCart() {
-    cartList.innerHTML = "";
-    let total = 0;
-  
-    cart.forEach(product => {
-      total += product.price * product.qty;
-      const li = document.createElement("li");
-  
-      li.innerHTML = `
+  cartList.innerHTML = "";
+  let total = 0;
+
+  cart.forEach(product => {
+    total += product.price * product.qty;
+    const li = document.createElement("li");
+
+    li.innerHTML = `
       <div class="cart-item-info">
         <div class="cart-item-name">${product.name}</div>
-        <div class="cart-item-details">$${(product.price * product.qty).toFixed(2)} - Qty: ${product.qty}</div>
+        <div class="cart-item-details">${formatCurrency(product.price)} x ${product.qty} = ${formatCurrency(product.price * product.qty)}</div>
       </div>
-        <button class="remove-btn" onclick="removeFromCart('${product.id}')">
-          <img src="images/trashicon.svg" alt="Remove">
-        </button>
+      <button class="remove-btn" onclick="removeFromCart('${product.id}')">
+        <img src="images/trashicon.svg" alt="Remove">
+      </button>
     `;
-      cartList.appendChild(li);
-    });
-  
-    cartTotal.textContent = `Total: $${total.toFixed(2)}`;
-  }
-  
+    cartList.appendChild(li);
+  });
+
+  cartTotal.textContent = `Total: ${formatCurrency(total)}`;
+}
 
 function removeFromCart(id) {
   const index = cart.findIndex(product => product.id === id);
@@ -84,7 +91,7 @@ checkoutBtn.addEventListener("click", () => {
     return;
   }
 
-  let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1`;
+  let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1&currency_code=MXN`;
 
   cart.forEach((product, i) => {
     const index = i + 1;
