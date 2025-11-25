@@ -1,105 +1,118 @@
-const cart = [];
-const cartList = document.getElementById("cart-items");
-const cartTotal = document.getElementById("cart-total");
-const checkoutBtn = document.getElementById("checkout-btn");
+document.addEventListener("DOMContentLoaded", () => {
 
-// Currency formatter for MXN
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('es-MX', {
-    style: 'currency',
-    currency: 'MXN'
-  }).format(value);
-};
+const versionSelect = document.getElementById("version");
+const autographContainer = document.getElementById("autographNameContainer");
+const autographName = document.getElementById("autographName");
+const countrySelect = document.getElementById("country");
+const tipInput = document.getElementById("tip");
+const totalPriceText = document.getElementById("totalPrice");
 
-// Add merch items to cart
-document.querySelectorAll(".item:not(.fanservice)").forEach(item => {
-  item.addEventListener("click", () => {
-    addToCart(item.dataset.id, item.dataset.name, parseFloat(item.dataset.price));
-  });
-});
-
-// Fanservice modal logic
-const fanserviceBtn = document.querySelector(".fanservice");
-const modal = document.getElementById("fanservice-modal");
-const closeBtn = modal.querySelector(".close-btn");
-
-fanserviceBtn.addEventListener("click", () => {
-  modal.style.display = "flex";
-});
-
-closeBtn.addEventListener("click", () => {
-  modal.style.display = "none";
-});
-
-// Add fanservice options
-document.querySelectorAll(".option").forEach(option => {
-  option.addEventListener("click", () => {
-    addToCart(option.dataset.id, option.dataset.name, parseFloat(option.dataset.price));
-    modal.style.display = "none";
-  });
-});
-
-// Add to cart function
-function addToCart(id, name, price) {
-  const existing = cart.find(product => product.id === id);
-  if (existing) {
-    existing.qty++;
-  } else {
-    cart.push({ id, name, price, qty: 1 });
-  }
-  renderCart();
+/* Price update */
+function updatePrice() {
+    let base = 25;
+    let shipping = countrySelect.value === "canada" ? 5 :
+                    countrySelect.value === "us" ? 10 : 12;
+    let tip = parseFloat(tipInput.value) || 0;
+    let total = base + shipping + tip;
+    totalPriceText.textContent = `Total: $${total.toFixed(2)}`;
+    return total;
 }
 
-function renderCart() {
-  cartList.innerHTML = "";
-  let total = 0;
+versionSelect.addEventListener("change", () => {
+    let isAuto = versionSelect.value === "auto";
+    autographContainer.classList.toggle("hidden", !isAuto);
+    if (!isAuto) autographName.value = "";
+});
 
-  cart.forEach(product => {
-    total += product.price * product.qty;
-    const li = document.createElement("li");
+countrySelect.addEventListener("change", updatePrice);
+tipInput.addEventListener("input", updatePrice);
+updatePrice();
 
-    li.innerHTML = `
-      <div class="cart-item-info">
-        <div class="cart-item-name">${product.name}</div>
-        <div class="cart-item-details">${formatCurrency(product.price)} x ${product.qty} = ${formatCurrency(product.price * product.qty)}</div>
-      </div>
-      <button class="remove-btn" onclick="removeFromCart('${product.id}')">
-        <img src="images/trashicon.svg" alt="Remove">
-      </button>
-    `;
-    cartList.appendChild(li);
-  });
-
-  cartTotal.textContent = `Total: ${formatCurrency(total)}`;
-}
-
-function removeFromCart(id) {
-  const index = cart.findIndex(product => product.id === id);
-  if (index > -1) {
-    if (cart[index].qty > 1) {
-      cart[index].qty--;
-    } else {
-      cart.splice(index, 1);
+/* Backend validation */
+function validateForm() {
+    if (versionSelect.value === "auto" && autographName.value.trim() === "") {
+        alert("Please enter a name for the autograph.");
+        return false;
     }
-  }
-  renderCart();
+    return true;
 }
 
-checkoutBtn.addEventListener("click", () => {
-  if (cart.length === 0) {
-    alert("Cart is empty!");
-    return;
-  }
+/* PayPal */
+paypal.Buttons({
+    createOrder: (data, actions) => {
+        if (!validateForm()) return;
 
-  let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1&currency_code=MXN`;
+        return actions.order.create({
+            purchase_units: [{
+                amount: { value: updatePrice().toFixed(2) },
+                description: `2026 Fluffycos Calendar - ${
+                    versionSelect.value === "auto"
+                    ? "Autographed | Name: " + autographName.value
+                    : "Standard"
+                }`
+            }]
+        });
+    },
 
-  cart.forEach((product, i) => {
-    const index = i + 1;
-    url += `&item_name_${index}=${encodeURIComponent(product.name)}`;
-    url += `&amount_${index}=${product.price}`;
-    url += `&quantity_${index}=${product.qty}`;
-    url += `&item_number_${index}=${product.id}`;
-  });
+    onApprove: (data, actions) =>
+        actions.order.capture().then(details => {
+            window.location.href = "thankyou.html";
+        })
 
-  window.location.href = url;
+}).render("#paypal-button-container");
+
+
+/* Carousel */
+const track = document.querySelector(".carousel-track");
+const images = Array.from(track.children);
+const thumbs = document.querySelectorAll(".thumb");
+let index = 0;
+
+function updateCarousel() {
+    track.style.transform = `translateX(-${index * 100}%)`;
+    thumbs.forEach(t => t.classList.remove("active"));
+    thumbs[index].classList.add("active");
+}
+
+document.querySelector(".next").addEventListener("click", () => {
+    index = (index + 1) % images.length;
+    updateCarousel();
+});
+
+document.querySelector(".prev").addEventListener("click", () => {
+    index = (index - 1 + images.length) % images.length;
+    updateCarousel();
+});
+
+thumbs.forEach((thumb, i) => {
+    thumb.addEventListener("click", () => {
+        index = i;
+        updateCarousel();
+    });
+});
+
+let autoplay = setInterval(() => {
+    index = (index + 1) % images.length;
+    updateCarousel();
+}, 4000);
+
+track.addEventListener("mouseenter", () => clearInterval(autoplay));
+track.addEventListener("mouseleave", () => {
+    autoplay = setInterval(() => {
+        index = (index + 1) % images.length;
+        updateCarousel();
+    }, 4000);
+});
+
+/* Description toggle */
+const descToggle = document.querySelector(".desc-toggle");
+const descContent = document.querySelector(".desc-content");
+
+descToggle.addEventListener("click", () => {
+    descContent.classList.toggle("open");
+    descToggle.textContent =
+        descContent.classList.contains("open")
+        ? "📕 Hide Description"
+        : "📖 Read Description";
+});
 });
