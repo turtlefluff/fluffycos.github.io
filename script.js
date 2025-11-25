@@ -104,7 +104,7 @@ track.addEventListener("mouseleave", () => {
     }, 4000);
 });
 
-/* Description toggle */
+/* Description toggle  okay*/
 const descToggle = document.querySelector(".desc-toggle");
 const descContent = document.querySelector(".desc-content");
 
