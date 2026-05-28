@@ -5,9 +5,9 @@ const checkoutBtn = document.getElementById("checkout-btn");
 
 // Currency formatter for MXN
 const formatCurrency = (value) => {
-  return new Intl.NumberFormat('es-MX', {
+  return new Intl.NumberFormat('de-DE', {
     style: 'currency',
-    currency: 'MXN'
+    currency: 'EUR'
   }).format(value);
 };
 
@@ -91,7 +91,7 @@ checkoutBtn.addEventListener("click", () => {
     return;
   }
 
-  let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1&currency_code=MXN`;
+  let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1&currency_code=EUR`;
 
   cart.forEach((product, i) => {
     const index = i + 1;
