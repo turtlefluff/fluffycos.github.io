@@ -3,7 +3,7 @@ const cartList = document.getElementById("cart-items");
 const cartTotal = document.getElementById("cart-total");
 const checkoutBtn = document.getElementById("checkout-btn");
 
-// Currency formatter for MXN
+// Currency formatter for EUR
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('de-DE', {
     style: 'currency',
