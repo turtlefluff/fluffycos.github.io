@@ -3,11 +3,19 @@ const cartList = document.getElementById("cart-items");
 const cartTotal = document.getElementById("cart-total");
 const checkoutBtn = document.getElementById("checkout-btn");
 
-// Currency formatter for EUR
+/* // Currency formatter for EUR
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('de-DE', {
     style: 'currency',
     currency: 'EUR'
+  }).format(value);
+}; */
+
+// Currency formatter for USD
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
   }).format(value);
 };
 
