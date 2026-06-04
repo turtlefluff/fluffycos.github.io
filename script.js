@@ -99,7 +99,8 @@ checkoutBtn.addEventListener("click", () => {
     return;
   }
 
-  let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1&currency_code=EUR`;
+  //let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1&currency_code=EUR`;
+  let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1&currency_code=USD`;
 
   cart.forEach((product, i) => {
     const index = i + 1;
