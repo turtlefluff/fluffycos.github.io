@@ -1,114 +1,88 @@
-const cart = [];
-const cartList = document.getElementById("cart-items");
-const cartTotal = document.getElementById("cart-total");
-const checkoutBtn = document.getElementById("checkout-btn");
+const defaultDialogue = "Hello! I'm Fluffy. Welcome to my character profile. Select a destination to begin.";
 
-/* // Currency formatter for EUR
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('de-DE', {
-    style: 'currency',
-    currency: 'EUR'
-  }).format(value);
-}; */
+const dialogueBox = document.getElementById('dialogue');
+const menuCards = document.querySelectorAll('.menuCard');
+const previewOverlay = document.getElementById('mobilePreviewOverlay');
+const previewTitle = document.getElementById('mobilePreviewTitle');
+const previewText = document.getElementById('mobilePreviewText');
+const previewButton = document.getElementById('mobilePreviewButton');
+let touchStartX = 0;
+let touchStartY = 0;
+let activePreviewUrl = '';
 
-// Currency formatter for USD
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-  }).format(value);
-};
-
-// Add merch items to cart
-document.querySelectorAll(".item:not(.fanservice)").forEach(item => {
-  item.addEventListener("click", () => {
-    addToCart(item.dataset.id, item.dataset.name, parseFloat(item.dataset.price));
-  });
-});
-
-// Fanservice modal logic
-const fanserviceBtn = document.querySelector(".fanservice");
-const modal = document.getElementById("fanservice-modal");
-const closeBtn = modal.querySelector(".close-btn");
-
-fanserviceBtn.addEventListener("click", () => {
-  modal.style.display = "flex";
-});
-
-closeBtn.addEventListener("click", () => {
-  modal.style.display = "none";
-});
-
-// Add fanservice options
-document.querySelectorAll(".option").forEach(option => {
-  option.addEventListener("click", () => {
-    addToCart(option.dataset.id, option.dataset.name, parseFloat(option.dataset.price));
-    modal.style.display = "none";
-  });
-});
-
-// Add to cart function
-function addToCart(id, name, price) {
-  const existing = cart.find(product => product.id === id);
-  if (existing) {
-    existing.qty++;
-  } else {
-    cart.push({ id, name, price, qty: 1 });
+function setDialogue(text) {
+  if (dialogueBox) {
+    dialogueBox.textContent = text;
   }
-  renderCart();
 }
 
-function renderCart() {
-  cartList.innerHTML = "";
-  let total = 0;
-
-  cart.forEach(product => {
-    total += product.price * product.qty;
-    const li = document.createElement("li");
-
-    li.innerHTML = `
-      <div class="cart-item-info">
-        <div class="cart-item-name">${product.name}</div>
-        <div class="cart-item-details">${formatCurrency(product.price)} x ${product.qty} = ${formatCurrency(product.price * product.qty)}</div>
-      </div>
-      <button class="remove-btn" onclick="removeFromCart('${product.id}')">
-        <img src="images/trashicon.svg" alt="Remove">
-      </button>
-    `;
-    cartList.appendChild(li);
-  });
-
-  cartTotal.textContent = `Total: ${formatCurrency(total)}`;
+function resetDialogue() {
+  setDialogue(defaultDialogue);
 }
 
-function removeFromCart(id) {
-  const index = cart.findIndex(product => product.id === id);
-  if (index > -1) {
-    if (cart[index].qty > 1) {
-      cart[index].qty--;
-    } else {
-      cart.splice(index, 1);
+function openPreviewPanel(message, url) {
+  if (!previewOverlay || !previewTitle || !previewText || !previewButton) return;
+
+  previewTitle.textContent = 'READY FOR THE NEXT STEP?';
+  previewText.textContent = message;
+  activePreviewUrl = url || '';
+  previewButton.dataset.href = activePreviewUrl;
+  previewOverlay.classList.add('is-open');
+  previewOverlay.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('mobile-preview-open');
+}
+
+function closePreviewPanel() {
+  if (!previewOverlay) return;
+
+  previewOverlay.classList.remove('is-open');
+  previewOverlay.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('mobile-preview-open');
+}
+
+previewOverlay?.addEventListener('click', (event) => {
+  if (event.target === previewOverlay) {
+    closePreviewPanel();
+  }
+});
+
+previewButton?.addEventListener('click', () => {
+  if (activePreviewUrl && activePreviewUrl !== '#') {
+    window.open(activePreviewUrl, '_blank', 'noopener,noreferrer');
+  }
+  closePreviewPanel();
+});
+
+menuCards.forEach((card) => {
+  const previewMessage = card.getAttribute('data-dialogue') || card.querySelector('p')?.textContent || '';
+  const cardUrl = card.getAttribute('data-url') || card.getAttribute('href') || '#';
+
+  card.addEventListener('mouseenter', () => setDialogue(previewMessage));
+  card.addEventListener('focus', () => setDialogue(previewMessage));
+  card.addEventListener('mouseleave', resetDialogue);
+  card.addEventListener('blur', resetDialogue);
+
+  card.addEventListener('touchstart', (event) => {
+    const touch = event.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+  }, { passive: true });
+
+  card.addEventListener('touchend', (event) => {
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - touchStartX;
+    const deltaY = touch.clientY - touchStartY;
+
+    if (window.matchMedia('(hover: none)').matches && deltaX > 70 && Math.abs(deltaY) < 60) {
+      event.preventDefault();
+      openPreviewPanel(previewMessage, cardUrl);
     }
-  }
-  renderCart();
-}
+  }, { passive: false });
 
-checkoutBtn.addEventListener("click", () => {
-  if (cart.length === 0) {
-    alert("Cart is empty!");
-    return;
-  }
-
-  //let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1&currency_code=EUR`;
-  let url = `https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=X7DSDTCNVDRK8&upload=1&currency_code=USD`;
-
-  cart.forEach((product, i) => {
-    const index = i + 1;
-    url += `&item_name_${index}=${encodeURIComponent(product.name)}`;
-    url += `&amount_${index}=${product.price}`;
-    url += `&quantity_${index}=${product.qty}`;
-    url += `&item_number_${index}=${product.id}`;
+  card.addEventListener('click', (event) => {
+    if (window.matchMedia('(hover: none)').matches) {
+      event.preventDefault();
+      openPreviewPanel(previewMessage, cardUrl);
+    }
   });
-
-  window.location.href = url;
 });
