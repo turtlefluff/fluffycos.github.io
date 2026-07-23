@@ -305,15 +305,20 @@ main{
     left:0;
 }
 
+
 .characterInfo h1{
-    font-family:Orbitron;
-    font-size:2.8rem;
+    font-family: Orbitron;
+    font-size: 2.8rem;
     letter-spacing:4px;
+    /* Strong neon glow using cyan/white stacked shadows */
+    text-shadow: 0 0 5px #fff, 0 0 10px var(--cyan), 0 0 20px var(--cyan), 0 0 40px var(--cyan);
 }
 
 .characterInfo p{
     color:var(--muted);
     letter-spacing:2px;
+    /* Soft, localized glow for the paragraph */
+    text-shadow: 0 0 4px var(--muted);
 }
 
 @keyframes float{
