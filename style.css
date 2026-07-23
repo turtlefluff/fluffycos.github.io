@@ -39,13 +39,74 @@ body::before{
 }
 
 .characterGlow{
-    position:absolute;
-    width:420px;
-    height:420px;
-    border-radius:50%;
-    background:radial-gradient(circle, var(--cyan), transparent 70%);
-    filter:blur(90px);
-    opacity:.25;
+
+position:absolute;
+
+width:420px;
+
+height:420px;
+
+background:
+
+radial-gradient(circle,
+var(--cyan),
+
+transparent 70%);
+
+filter:blur(40px);
+
+animation:pulse 6s infinite;
+
+}
+
+@keyframes float{
+
+0%{
+
+transform:translateY(0px);
+
+}
+
+50%{
+
+transform:translateY(-18px);
+
+}
+
+100%{
+
+transform:translateY(0px);
+
+}
+
+}
+
+@keyframes pulse{
+
+0%{
+
+transform:scale(1);
+
+opacity:.8;
+
+}
+
+50%{
+
+transform:scale(1.15);
+
+opacity:.5;
+
+}
+
+100%{
+
+transform:scale(1);
+
+opacity:.8;
+
+}
+
 }
 
 .panel::before{
