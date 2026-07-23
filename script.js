@@ -23,7 +23,7 @@ function resetDialogue() {
 function openPreviewPanel(message, url) {
   if (!previewOverlay || !previewTitle || !previewText || !previewButton) return;
 
-  previewTitle.textContent = 'READY FOR THE NEXT STEP?';
+  previewTitle.textContent = 'ARE YOU READY?';
   previewText.textContent = message;
   activePreviewUrl = url || '';
   previewButton.dataset.href = activePreviewUrl;
